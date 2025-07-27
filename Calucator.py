@@ -1,66 +1,57 @@
 import streamlit as st
-st.title('Mini calculator')
-monitor=""
-st.title(monitor)
+
+st.title("Mini calculator")
+
+def Calcuator():
+ if "monitor" not in st.session_state:
+     st.session_state.monitor = ""
 
 
+ def add_to_monitor(value):
+    if value !="=":
+     st.session_state.monitor=str(st.session_state.monitor) 
+     st.session_state.monitor+= value
+    else:
+        st.session_state.monitor= eval(st.session_state.monitor)
+        
+        Operation(st.session_state.monitor)
+    st.rerun() 
+ st.markdown("### Écran :")
+ st.code(st.session_state.monitor)
+ def create_row(row):
+     cols = st.columns(len(row))
+     for i, col in enumerate(cols):
+         with col: 
+             if st.button(row[i],key=row[i])  :
+                
+                 
+                 add_to_monitor(row[i])
+                
+                     
+              
 
-first=["x²","1/x","|x|","exp","del"]
-seconde=["(",")","n!","mod","/"]
-thirty=["xy","7","8","9","X"]
-fourty=["10x","4","5","6","--"]
-fifty = ["log", "1", "2", "3", "++"]
-sixty = ["ln", "*/-", "0","," , "="]
-
-rows=st.columns(len(first))      
-row2=st.columns(len(seconde))
-row3=st.columns(len(thirty))
-row4=st.columns(len(fourty))
-row5=st.columns(len(fifty))
-row6=st.columns(len(sixty))
-class Calculator :
+ first = ["x²", "1/x", "|x|", "exp", "del"]
+ second = ["(", ")", "n!", "mod", "/"]
+ third = ["xy", "7", "8", "9", "*"]
+ fourth = ["10x", "4", "5", "6",'-' ]
+ fifth = ["log", "1", "2", "3", "+"]
+ sixth = ["ln", "*/-", "0", ".", "="]
  
- def __init__(self,value=""):
-  self.output=value
+ def Operation(ope):
 
- def Screen(self,M):
-  self.output=self.output+ M
-  st.title(self.output)
+    return st.title(ope)
 
- def button(self):
-  for i,col in enumerate(rows):   
-   with col: 
-    if st.button(first[i]):
-     
-     self.Screen(first[i])
-     
-
-  for i, col in enumerate(row2):
-    with col:
-     st.button(seconde[i])
-      
-  for i, col in enumerate(row3):
-    with col:
-     st.button(thirty[i])
-  for i, col in enumerate(row4):
-    with col:
-     st.button(fourty[i])
-  for i, col in enumerate(row5):
-    with col:
-     st.button(fifty[i])
-  for i, col in enumerate(row6):
-    with col:
-     st.button(sixty[i])
-
+    
+ 
+ create_row(first)
+ create_row(second)
+ create_row(third)
+ create_row(fourth)
+ create_row(fifth)
+ create_row(sixth)
 
 def main():
-
-  Cal=Calculator("")
-  st.write()
-  Cal.Screen(Cal.output)
-  Cal.button()
+    Calcuator()
 
 main()
-
-
 
