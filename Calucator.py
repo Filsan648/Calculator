@@ -1,16 +1,41 @@
 import streamlit as st
-
+import math
 st.title("Mini calculator")
 
 def Calcuator():
  if "monitor" not in st.session_state:
      st.session_state.monitor = ""
 
-
  def add_to_monitor(value):
     if value !="=":
-     st.session_state.monitor=str(st.session_state.monitor) 
-     st.session_state.monitor+= value
+     if value=="del" : 
+        lene=len(st.session_state.monitor)-1
+        st.session_state.monitor.remove(st.session_state.monitor[lene])
+     elif value=="Sup":
+        st.session_state.monitor=""   
+     elif value =="x²":
+         st.session_state.monitor=str(st.session_state.monitor)  
+         carre=eval(st.session_state.monitor) * 2 
+         st.session_state.monitor=str(carre)
+     elif value =="1/x":
+        st.session_state.monitor=str(st.session_state.monitor) 
+        st.session_state.monitor=1/eval(st.session_state.monitor) 
+
+     elif value=="|x|":
+        st.session_state.monitor=str(st.session_state.monitor) 
+        if eval(st.session_state.monitor)<0:
+          st.session_state.monitor+="*-1"
+     elif value=="mod":
+            st.session_state.monitor+="%"
+
+     elif value=="10x":
+         st.session_state.monitor+="*10"
+     elif value=="log":
+        st.session_state.monitor=math.log(eval(st.session_state.monitor))
+     
+     else:   
+      st.session_state.monitor=str(st.session_state.monitor) 
+      st.session_state.monitor+= value
     else:
         st.session_state.monitor= eval(st.session_state.monitor)
         
@@ -24,13 +49,13 @@ def Calcuator():
          with col: 
              if st.button(row[i],key=row[i])  :
                 
-                 
+       
                  add_to_monitor(row[i])
                 
                      
               
 
- first = ["x²", "1/x", "|x|", "exp", "del"]
+ first = ["x²", "1/x", "|x|", "Sup", "del"]
  second = ["(", ")", "n!", "mod", "/"]
  third = ["xy", "7", "8", "9", "*"]
  fourth = ["10x", "4", "5", "6",'-' ]
