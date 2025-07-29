@@ -1,82 +1,76 @@
 import streamlit as st
 import math
-st.title("Mini calculator")
 
-def Calcuator():
- if "monitor" not in st.session_state:
-     st.session_state.monitor = ""
+st.set_page_config(page_title="Calculatrice Avancée")
+st.title("Calculatrice Scientifique")
 
- def add_to_monitor(value):
-    if value !="=":
-     if value=="del" : 
-        lene=len(st.session_state.monitor)-1
-        st.session_state.monitor.remove(st.session_state.monitor[lene])
-     elif value=="Sup":
-        st.session_state.monitor=""   
-     elif value =="x²":
-         st.session_state.monitor=str(st.session_state.monitor)  
-         carre=eval(st.session_state.monitor) * 2 
-         st.session_state.monitor=str(carre)
-     elif value =="1/x":
-        st.session_state.monitor=str(st.session_state.monitor) 
-        st.session_state.monitor=1/eval(st.session_state.monitor) 
+# Initialiser l'état
+if "monitor" not in st.session_state:
+    st.session_state.monitor = ""
 
-     elif value=="|x|":
-        st.session_state.monitor=str(st.session_state.monitor) 
-        if eval(st.session_state.monitor)<0:
-          st.session_state.monitor+="*-1"
-     elif value=="mod":
-            st.session_state.monitor+="%"
+# Affichage de l'écran
+st.markdown("### Écran :")
+st.code(st.session_state.monitor, language="python")
 
-     elif value=="10x":
-         st.session_state.monitor+="*10"
-     elif value=="log":
-        st.session_state.monitor=math.log(eval(st.session_state.monitor))
-     
-     else:   
-      st.session_state.monitor=str(st.session_state.monitor) 
-      st.session_state.monitor+= value
-    else:
-        st.session_state.monitor= eval(st.session_state.monitor)
-        
-        Operation(st.session_state.monitor)
-    st.rerun() 
- st.markdown("### Écran :")
- st.code(st.session_state.monitor)
- def create_row(row):
-     cols = st.columns(len(row))
-     for i, col in enumerate(cols):
-         with col: 
-             if st.button(row[i],key=row[i])  :
-                
-       
-                 add_to_monitor(row[i])
-                
-                     
-              
+# Fonction principale
+def add_to_monitor(value):
+    try:
+        if value == "=":
+            result = eval_expr(st.session_state.monitor)
+            st.session_state.monitor = str(result)
+        elif value == "del":
+            st.session_state.monitor = st.session_state.monitor[:-1]
+        elif value == "Sup":
+            st.session_state.monitor = ""
+        elif value == "x²":
+            st.session_state.monitor = str(eval_expr(st.session_state.monitor) ** 2)
+        elif value == "1/x":
+            st.session_state.monitor = str(1 / eval_expr(st.session_state.monitor))
+        elif value == "|x|":
+            st.session_state.monitor = str(abs(eval_expr(st.session_state.monitor)))
+        elif value == "n!":
+            st.session_state.monitor = str(math.factorial(int(eval_expr(st.session_state.monitor))))
+        elif value == "mod":
+            st.session_state.monitor += "%"
+        elif value == "10x":
+            st.session_state.monitor += "*10"
+        elif value == "log":
+            st.session_state.monitor = str(math.log10(eval_expr(st.session_state.monitor)))
+        elif value == "ln":
+            st.session_state.monitor = str(math.log(eval_expr(st.session_state.monitor)))
+        elif value == "xy":
+            st.session_state.monitor += "**"
+        else:
+            st.session_state.monitor += value
+    except Exception as e:
+        st.session_state.monitor = "Erreur"
 
- first = ["x²", "1/x", "|x|", "Sup", "del"]
- second = ["(", ")", "n!", "mod", "/"]
- third = ["xy", "7", "8", "9", "*"]
- fourth = ["10x", "4", "5", "6",'-' ]
- fifth = ["log", "1", "2", "3", "+"]
- sixth = ["ln", "*/-", "0", ".", "="]
- 
- def Operation(ope):
+    st.rerun()
 
-    return st.title(ope)
+# Évaluer l'expression de manière sécurisée
+def eval_expr(expr):
+    try:
+        return eval(expr)
+    except:
+        return "Erreur"
 
-    
- 
- create_row(first)
- create_row(second)
- create_row(third)
- create_row(fourth)
- create_row(fifth)
- create_row(sixth)
+# Interface
+def create_row(buttons):
+    cols = st.columns(len(buttons))
+    for i, col in enumerate(cols):
+        with col:
+            if st.button(buttons[i], key=f"{buttons[i]}-{i}"):
+                add_to_monitor(buttons[i])
 
-def main():
-    Calcuator()
+# Disposition des boutons
+rows = [
+    ["x²", "1/x", "|x|", "Sup", "del"],
+    ["(", ")", "n!", "mod", "/"],
+    ["xy", "7", "8", "9", "*"],
+    ["10x", "4", "5", "6", "-"],
+    ["log", "1", "2", "3", "+"],
+    ["ln", "*/-", "0", ".", "="]
+]
 
-main()
-
+for row in rows:
+    create_row(row)
