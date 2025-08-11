@@ -59,10 +59,9 @@ def create_row(buttons):
     cols = st.columns(len(buttons))
     for i, col in enumerate(cols):
         with col:
-            if st.button(buttons[i], key=f"{buttons[i]}-{i}"):
+            if st.button( f"{buttons[i]}," , key=f"btn{buttons[i]}-{i}"):
                 add_to_monitor(buttons[i])
 
-# Disposition des boutons
 rows = [
     ["x²", "1/x", "|x|", "Sup", "del"],
     ["(", ")", "n!", "mod", "/"],
